@@ -1,61 +1,43 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import styles from './LogIn.module.css';
-interface FormState {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
-interface FormErrors {
+interface IFormInput {
+  name: string;
   email: string;
-  password: string;
-  confirmPassword: string;
+  password: number;
+  repitPassword: string;
 }
 
 export function LogIn(): JSX.Element {
-  const [formState, setFormState] = useState<FormState>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const [formErrors, setFormErrors] = useState<FormErrors>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    const { id, value } = e.target;
-    setFormState((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState,
+    formState: { errors },
+  } = useForm<IFormInput>();
+
+  // console.log(useForm());
+  // console.log(formState);
+  // console.log(errors);
+
+  const onSubmit = (data: IFormInput, e: React.BaseSyntheticEvent): void => {
+    {}
+    alert(JSON.stringify(data));
+    e.target.reset();
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
-    event.preventDefault();
-    const emailError = validateEmail(formState.email);
-    const passwordError = validatePassword(formState.password);
-    const confirmPasswordError = validateConfirmPassword(
-      formState.password,
-      formState.confirmPassword,
-    );
+  // console.log(watch('password'));
 
-    setFormErrors({
-      email: emailError,
-      password: passwordError,
-      confirmPassword: confirmPasswordError,
-    });
+  // const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+  //   const { id, value } = e.target;
 
-    if (!emailError && !passwordError && !confirmPasswordError) {
-      // handle form submission
-      console.log('Form submitted successfully');
-    }
-  };
+  // };
+
   const togglePasswordVisibility = (): void => {
     setShowPassword(!showPassword);
   };
@@ -71,49 +53,111 @@ export function LogIn(): JSX.Element {
 
   return (
     <div className={styles.container}>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.inputs}>
           <h2>Регистрация</h2>
 
           <div className={styles.group}>
-            <label htmlFor="name">Имя</label>
-            <input type="text" id="name" placeholder="Артур" />
+            <label>Имя</label>
+            <input
+              // type="text"
+              placeholder="Артур"
+              // value={formState.name}
+              {...register('name', {
+                required: true,
+                maxLength: 20,
+              })}
+              className={errors?.name ? styles.error : ''}
+            />
+            {errors?.name?.type === 'required' && (
+              <p className={styles.message}>Ошибка: поле обязательно для заполнения</p>
+            )}
+            {errors?.name?.type === 'maxLength' && (
+              <p className={styles.message}>Ошибка: имя не должно превышать 20 символов</p>
+            )}
           </div>
 
           <div className={styles.group}>
-            <label htmlFor="email">Электронная почта</label>
-            <input type="email"
-            id="email"
-            placeholder="example@mail.ru"
-            value={formState.email}
-            onChange={handleInputChange}
-            className={formErrors.email ? styles.error : ''} />
+            <label>Электронная почта</label>
+            <input
+              placeholder="example@mail.ru"
+              // value={formState.email}
+              // onChange={handleInputChange}
+              {...register('email', {
+                required: true,
+                pattern: /^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/i,
+              })}
+              className={errors?.email ? styles.error : ''}
+            />
+            {errors?.email?.type === 'required' && (
+              <p className={styles.message}> Ошибка: поле обязательно для заполнения</p>
+            )}
+            {errors?.email?.type === 'pattern' && (
+              <p className={styles.message}>Ошибка: введите корректный адрес</p>
+            )}
           </div>
 
           <div className={styles.group}>
-            <label htmlFor="password">Пароль</label>
+            <label>Пароль</label>
             <div className={styles.password}>
-              <input type={showPassword ? 'text' : 'password'} id="password" placeholder="******" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                placeholder="******"
+                {...register('password', {
+                  required: true,
+                  pattern: /^(?=.*[a-zA-Z])(?=.*[0-9]).{6,}$/i,
+                })}
+                className={errors?.password ? styles.error : ''}
+              />
+              {errors?.password?.type === 'required' && (
+                <p className={styles.message}> Ошибка: поле обязательно для заполнения</p>
+              )}
+              {errors?.password?.type === 'pattern' && (
+                <p className={styles.message}>Ошибка: пароль должен быть не короче 6 символов и содержать числа и буквы латинского алфавита</p>
+              )}
               <button type="button" className={styles.toggle} onClick={togglePasswordVisibility}>
-                &#128065;
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke={showPassword ? '#512689' : '#808185'}
+                >
+                  <use href="eye1.svg#eye" />
+                </svg>
               </button>
             </div>
           </div>
 
           <div className={styles.group}>
-            <label htmlFor="confirm-password">Подтвердите пароль</label>
+            <label>Подтвердите пароль</label>
             <div className={styles.password}>
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 id="confirm-password"
                 placeholder="******"
+                {...register('repitPassword', {
+                  required: true,
+                  validate: (value) => value === watch('password') || '',
+                })}
+                className={errors?.repitPassword ? styles.error : ''}
               />
+              {errors?.repitPassword && (
+                <p className={styles.message}>Ошибка: пароли не совпадают</p>
+              )}
               <button
                 type="button"
                 className={styles.toggle}
                 onClick={toggleConfirmPasswordVisibility}
               >
-                &#128065;
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  stroke={showConfirmPassword ? '#512689' : '#808185'}
+                >
+                  <use href="eye1.svg#eye" />
+                </svg>
               </button>
             </div>
           </div>

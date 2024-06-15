@@ -1,13 +1,17 @@
-import { ConfigureStoreOptions, configureStore } from '@reduxjs/toolkit';
-import postSlice, { SliceState } from './postSlice';
+import type { ConfigureStoreOptions} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
+import type { SliceState } from './personsSlice';
+import personsSlice from './personsSlice';
+import userSlice from './userSlice';
 
 type StoreType = {
-  postSlice: SliceState;
+  personsSlice: SliceState;
 };
 
 const storeOptions: ConfigureStoreOptions<StoreType> = {
   reducer: {
-    postSlice,
+    userSlice
+    personsSlice,
   },
 };
 
