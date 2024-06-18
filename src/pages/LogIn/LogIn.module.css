@@ -1,4 +1,4 @@
-body {
+.body {
   margin: 0;
   place-items: center;
   justify-content: center;
@@ -6,7 +6,7 @@ body {
   min-height: 100vh;
 }
 
-body,
+.body,
 .container,
 .inputs,
 .group {
@@ -92,4 +92,15 @@ input.error {
 
 .toggle {
   align-self: center;
+}
+
+@media (max-width: 500px) {
+  .container {
+    width: 100%;
+  }
+
+  .body {
+    justify-content: start;
+    padding-top: 64px;
+  }
 }

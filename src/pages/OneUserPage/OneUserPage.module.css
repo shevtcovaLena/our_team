@@ -1,5 +1,58 @@
 .container {
-  padding: 20px;
-  border: 1px solid white;
-  margin: 10px;
+  margin-top: 49px;
+  margin-left: 188px;
+  display: flex;
+  gap: 129px;
+}
+
+.container p {
+  font-size: 16px;
+  line-height: 136%;  
+}
+
+.textcontainer {
+  width: 630px;
+}
+
+.contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contacts p {
+  display: flex;
+  align-items: center;
+}
+
+.contacts svg {
+  margin-right: 10px;
+}
+
+@media (max-width: 1180px) {
+  .container {
+    margin: 32px 16px 0 16px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 32px;
+    align-items: center;
+  }
+
+  .contacts {
+    width: 630px;
+  }
+}
+
+@media (max-width: 900px) {
+  .container {
+    margin: 32px 16px 0 16px;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 32px;
+  }
+
+  .textcontainer,
+  .contacts {
+    width: 100%;
+  }
 }

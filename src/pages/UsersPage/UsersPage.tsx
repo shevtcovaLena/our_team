@@ -1,32 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Form from '../../components/Form/Form';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import List from '../../components/List/List';
-
-export type UserType = {
-  id: number;
-  title: string;
-  body: string;
-  status: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-};
+import Navbar from '../../components/Navbar/Navbar';
+import { fetchLikes, fetchUsers } from '../../redux/thunkActions';
+// import { setlikes } from '../../redux/personsSlice';
 
 export function UsersPage(): JSX.Element {
-  const [todos, setUsers] = useState<UserType[]>([]);
+  const users = useAppSelector((state) => state.personsSlice.users);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    axios
-      .get<UserType[]>('https://reqres.in/api/users?page=1')
-      .then((response) => setUsers(response.data))
-      .catch((error) => console.log(error));
+    void dispatch(fetchUsers());
+    void dispatch(fetchLikes());
+  // },[]);
+
+  // useEffect(() => {
+  //   let likes:string;
+  //   (function () {
+  //     likes = localStorage.getItem('likes');
+  //     if (likes) {
+  //       JSON.parse(likes).forEach((el) => {
+  //         // if (el.like) {
+  //           const likedUser = users.find((user) => user.id === el.id);
+  //           if (likedUser) {
+  //             dispatch(setlikes({id: el.id, like: el.like}));
+  //           }
+  //         // }
+  //       });
+  //     }
+  //   })();
+    return () => {
+      // (function () {
+        console.log('размонтируем');
+        localStorage.setItem(
+          'likes',
+          JSON.stringify(users.map((el) => ({ id: el.id, like: el.like }))),
+        );
+      // })();
+    };
   }, []);
 
   return (
     <>
-      <h1>Person-List</h1>
-      <Form setUsers={setUsers} />
-      <List todos={todos} setUsers={setUsers} />
+      <Navbar user={null} />
+      <List users={users} />
     </>
   );
 }

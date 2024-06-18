@@ -2,7 +2,6 @@ import type { ConfigureStoreOptions} from '@reduxjs/toolkit';
 import { configureStore } from '@reduxjs/toolkit';
 import type { SliceState } from './personsSlice';
 import personsSlice from './personsSlice';
-import userSlice from './userSlice';
 
 type StoreType = {
   personsSlice: SliceState;
@@ -10,7 +9,6 @@ type StoreType = {
 
 const storeOptions: ConfigureStoreOptions<StoreType> = {
   reducer: {
-    userSlice
     personsSlice,
   },
 };

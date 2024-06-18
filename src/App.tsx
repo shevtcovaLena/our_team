@@ -1,9 +1,10 @@
 import React from 'react';
 import './App.css';
-import { LogIn, MainPage, OneUserPage, UsersPage } from './pages';
+import { LogIn, OneUserPage, UsersPage } from './pages';
 // import Navbar from './components/Navbar/Navbar';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './router/ProtectedRoute';
+import { getCookie } from './helpers/getcockie';
 
 export type UserType = {
   id: number;
@@ -22,10 +23,10 @@ function App(): JSX.Element {
         <Route path="/" element={<LogIn />} />
         {/* <Route path="/" element={<MainPage />} /> */}
         {/* <Route path="/counter" element={<CounterPage />} /> */}
-        {/* <Route element={<ProtectedRoute isAuth={false} redirectTo="/" />}>
-          <Route path="/users/:page" element={<UsersPage />} />
+        <Route element={<ProtectedRoute isAuth={Boolean(getCookie('token'))} redirectTo="/" />}>
+          <Route path="/users" element={<UsersPage />} />
           <Route path="/users/:id" element={<OneUserPage />} />
-        </Route> */}
+        </Route>
       </Routes>
     </>
   );

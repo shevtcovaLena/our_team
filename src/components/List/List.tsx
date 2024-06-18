@@ -1,15 +1,15 @@
-import type { Dispatch, SetStateAction } from 'react';
+// import type { Dispatch, SetStateAction } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { UserType } from '../../App';
 import Person from '../Person/Person';
+import styles from './List.module.css';
+import { PersonsType } from 'types/types';
 
 type ListPropsType = {
-  todos: UserType[];
-  setUsers: Dispatch<SetStateAction<UserType[]>>;
+  users: PersonsType;  
 };
 
-export default function List({ todos, setUsers }: ListPropsType): JSX.Element {
+export default function List({ users }: ListPropsType): JSX.Element {
   const navigate = useNavigate();
 
   const handleNavigate = (id: number) => {
@@ -17,13 +17,12 @@ export default function List({ todos, setUsers }: ListPropsType): JSX.Element {
   };
 
   return (
-    <div>
-      {todos?.map((users) => (
+    <div className={styles.container}>
+      {users?.map((user) => (
         <Person
-          key={users.id}
-          users={users}
-          setUsers={setUsers}
-          onClick={() => handleNavigate(users.id)}
+          key={user.id}
+          user={user}
+          onClick={() => handleNavigate(user.id)}
         />
       ))}
     </div>

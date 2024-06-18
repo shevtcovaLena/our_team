@@ -1,28 +1,36 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { UserType } from '../../App';
 import axios from 'axios';
+import styles from './Person.module.css'
+import { IPerson } from 'types/types';
+import { useAppDispatch } from '../../redux/hooks';
+import { likeaction } from '../../redux/personsSlice';
 
 type UserPropsType = {
-  users: UserType;
-  setUsers: Dispatch<SetStateAction<UserType[]>>;
+  user: IPerson;
   onClick: () => void;
 };
 
-export default function Person({ users, setUsers, onClick }: UserPropsType): JSX.Element {
-  const deleteHandler = async () => {
-    await axios.delete(`${import.meta.env.VITE_API_URL}${users.id}`);
-    setUsers((prev) => prev.filter((el) => el.id !== users.id));
+export default function Person({ user, onClick }: UserPropsType): JSX.Element {
+  const dispatch = useAppDispatch();
+  
+  const likeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+    dispatch(likeaction(user.id));
   };
+    
   return (
     <div
       onClick={onClick}
-      style={{ padding: '20px', border: '1px solid white', margin: '10px', cursor: 'pointer' }}
+      className={styles.container}     
     >
-      <h1>{users.title}</h1>
-      <p>{users.body}</p>
-      <button type="button" onClick={deleteHandler}>
-        Удалить
-      </button>
+      <div className={styles.avatar}><img src={user.avatar} alt="Аватар" /></div>
+      <h2>{user.first_name + ' ' + user.last_name}</h2>
+      <div role='button' className={styles.like} onClick={(e) => likeHandler(e)}>
+      <svg width="16" height="14" viewBox="0 0 16 14" fill={user.like ?"#512689":"none"} stroke={user.like ?"none":"#151317"}>
+        <use href='/eye1.svg#like'/>
+      </svg>
+      </div>
     </div>
   );
 }
