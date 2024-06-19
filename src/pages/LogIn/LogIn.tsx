@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../../helpers/getcockie';
 import { login } from '../../redux/personsSlice';
 
-
 interface IFormInput {
   name: string;
   email: string;
@@ -23,8 +22,8 @@ export function LogIn(): JSX.Element {
 
   useEffect(() => {
     if (getCookie('token')) {
-      console.log('navigate')
-      dispatch(login())
+      console.log('navigate');
+      dispatch(login());
       navigate('/users');
     }
   }, [navigate]);
@@ -36,7 +35,7 @@ export function LogIn(): JSX.Element {
     formState: { errors },
   } = useForm<IFormInput>({
     defaultValues: {
-      email: 'eve.holt@reqres.in',
+      email: 'eve.holt@reqres.in', //устанавливаю дефолтное значение для email, т.к. к сожалению на reqres.in с рандомным адресом ручка не срабатывает
     },
   });
 
@@ -55,7 +54,9 @@ export function LogIn(): JSX.Element {
     } catch (error) {
       console.error(error);
       console.log(`Введите следующие данные: "email": "eve.holt@reqres.in"`);
-      alert(`Для успешной регистрации введите email: eve.holt@reqres.in, указан в консоли (для удобства копирования)`);
+      alert(
+        `Для успешной регистрации введите email: eve.holt@reqres.in, указан в консоли (для удобства копирования)`,
+      );
     }
   };
 
