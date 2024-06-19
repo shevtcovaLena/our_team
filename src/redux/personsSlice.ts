@@ -34,18 +34,14 @@ const personsSlice = createSlice({
     });
     builder.addCase(fetchUsers.fulfilled, (state, { payload }) => {
       if (payload) {
-        let likes: Array<{ id: number; like: boolean }> = [];
-        const likestr: string | null = sessionStorage.getItem('likes');
-        if (likestr) {
-          likes = JSON.parse(likestr);
-        }
-        state.users = payload.map((user) => {
-          const like = likes.find((lk) => lk.id === user.id);
-          if (like) {
-            return { ...user, ...like };
-          }
-          return { ...user, like: false };
-        });
+        const likes: Array<{ id: number; like: boolean }> = JSON.parse(sessionStorage.getItem('likes') || '[]');
+        const likesMap = new Map<number, boolean>(likes.map(like => [like.id, like.like]));
+    
+        state.users = payload.map(user => ({
+          ...user,
+          like: likesMap.get(user.id) ?? false,
+        }));
+    
         state.isLoading = false;
       }
     });
