@@ -44,7 +44,8 @@ export function LogIn(): JSX.Element {
       }
     } catch (error) {
       console.error(error);
-      alert('Ошибка регистрации. Проверьте правильность введенных данных.');
+      console.log(`Введите следующие данные: "email": "eve.holt@reqres.in"`);
+      alert(`Для успешной регистрации введите email, который указан в консоли (для удобства копирования)`);
     }
   };
 
