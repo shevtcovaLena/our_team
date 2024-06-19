@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 import { LogIn, OneUserPage, UsersPage } from './pages';
-// import Navbar from './components/Navbar/Navbar';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './router/ProtectedRoute';
 import { getCookie } from './helpers/getcockie';
+import { useAppSelector } from './redux/hooks';
 
 export type UserType = {
   id: number;
@@ -16,14 +16,13 @@ export type UserType = {
 };
 
 function App(): JSX.Element {
+  const isAuth = useAppSelector((state) => state.personsSlice.isAuth);
+
   return (
     <>
-      {/* <Navbar /> */}
       <Routes>
         <Route path="/" element={<LogIn />} />
-        {/* <Route path="/" element={<MainPage />} /> */}
-        {/* <Route path="/counter" element={<CounterPage />} /> */}
-        <Route element={<ProtectedRoute isAuth={Boolean(getCookie('token'))} redirectTo="/" />}>
+        <Route element={<ProtectedRoute isAuth={isAuth} redirectTo="/" />}>
           <Route path="/users" element={<UsersPage />} />
           <Route path="/users/:id" element={<OneUserPage />} />
         </Route>

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useAppDispatch } from '../../redux/hooks';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import styles from './LogIn.module.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../../helpers/getcockie';
+import { login } from '../../redux/personsSlice';
+
 
 interface IFormInput {
   name: string;
@@ -16,12 +19,15 @@ export function LogIn(): JSX.Element {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (getCookie('token')) {
+      console.log('navigate')
+      dispatch(login())
       navigate('/users');
     }
-  }, []);
+  }, [navigate]);
 
   const {
     register,

@@ -2,6 +2,8 @@ import React from 'react';
 import styles from './Navbar.module.css';
 import { NavigateFunction, useLocation, Location, useNavigate } from 'react-router-dom';
 import { IPerson } from 'types/types';
+import { useAppDispatch } from '../../redux/hooks';
+import { logout } from '../../redux/personsSlice';
 
 type Props = {
   user: IPerson | null;
@@ -10,6 +12,7 @@ type Props = {
 export default function Navbar({ user }: Props) {
   const navigate: NavigateFunction = useNavigate();
   const location: Location = useLocation();
+  const dispatch = useAppDispatch();
 
   const backAction = () => {
     navigate(-1);
@@ -17,6 +20,7 @@ export default function Navbar({ user }: Props) {
 
   const exitAction = () => {
     document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    dispatch(logout())
     navigate('/');
   };
 

@@ -5,11 +5,13 @@ import { PersonsType } from '../types/types';
 export type SliceState = {
   users: PersonsType;
   isLoading: boolean;
+  isAuth: boolean;
 };
 
 const initialState: SliceState = {
   users: [],
   isLoading: true,
+  isAuth: false,
 };
 
 const personsSlice = createSlice({
@@ -26,6 +28,12 @@ const personsSlice = createSlice({
         like: el.like ?? false,
       }));
       sessionStorage.setItem('likes', JSON.stringify(likes));
+    },
+    login(state) {
+      state.isAuth = true;
+    },
+    logout(state) {
+      state.isAuth = false;
     },
   },
   extraReducers: (builder) => {
@@ -49,4 +57,4 @@ const personsSlice = createSlice({
 });
 
 export default personsSlice.reducer;
-export const { likeaction } = personsSlice.actions;
+export const { likeaction, login, logout } = personsSlice.actions;
