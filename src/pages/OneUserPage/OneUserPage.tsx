@@ -12,7 +12,7 @@ export function OneUserPage(): JSX.Element {
 
   useEffect(() => {
     axios
-      .get<IPerson>(`https://reqres.in/api/users/${id}`)
+      .get<{data:IPerson}>(`https://reqres.in/api/users/${id}`)
       .then((response) => setUser(response.data.data))
       .catch((error) => console.log(error));
   }, []);
