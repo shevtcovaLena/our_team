@@ -3,7 +3,6 @@ import './App.css';
 import { LogIn, OneUserPage, UsersPage } from './pages';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './router/ProtectedRoute';
-import { getCookie } from './helpers/getcockie';
 import { useAppSelector } from './redux/hooks';
 
 export type UserType = {
