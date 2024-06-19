@@ -34,7 +34,11 @@ export function LogIn(): JSX.Element {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    defaultValues: {
+      email: 'eve.holt@reqres.in',
+    },
+  });
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
