@@ -1,6 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
-import { UserType } from '../../App';
-import axios from 'axios';
+import React from 'react';
 import styles from './Person.module.css'
 import { IPerson } from 'types/types';
 import { useAppDispatch } from '../../redux/hooks';
@@ -14,7 +12,7 @@ type UserPropsType = {
 export default function Person({ user, onClick }: UserPropsType): JSX.Element {
   const dispatch = useAppDispatch();
   
-  const likeHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const likeHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation()
     dispatch(likeaction(user.id));
   };

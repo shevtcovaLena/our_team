@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import styles from './LogIn.module.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import { getCookie } from '../../helpers/getcockie';
 interface IFormInput {
   name: string;
   email: string;
-  password: number;
+  password: string;
   repitPassword: string;
 }
 
@@ -30,7 +30,7 @@ export function LogIn(): JSX.Element {
     formState: { errors },
   } = useForm<IFormInput>();
 
-  const onSubmit = async (data: IFormInput, e: React.BaseSyntheticEvent): Promise<void> => {
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
     const sendBody = { email, password };
     try {
@@ -38,15 +38,13 @@ export function LogIn(): JSX.Element {
       if (response.status === 200) {
         const { token } = response.data;
         document.cookie = `token=${token}; max-age=${60 * 60 * 24 * 30}; path=/`;
-        e.target.reset();
         navigate('/users');
       } else {
-        throw new Error('Ошибка регистрации' + response.data.error);
+        throw new Error('Ошибка регистрации: ' + response.data.error);
       }
     } catch (error) {
-      console.log(error);
-      console.log(`введите следующие данные: "email": "eve.holt@reqres.in"`);
-      alert(`для успешной регистрации введите email, который, указан в консоли (для удобства копирования)`);
+      console.error(error);
+      alert('Ошибка регистрации. Проверьте правильность введенных данных.');
     }
   };
 
@@ -124,14 +122,7 @@ export function LogIn(): JSX.Element {
                   </p>
                 )}
                 <button type="button" className={styles.toggle} onClick={togglePasswordVisibility}>
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    stroke={showPassword ? '#512689' : '#808185'}
-                  >
-                    <use href="eye1.svg#eye" />
-                  </svg>
+                  Показать пароль
                 </button>
               </div>
             </div>
@@ -145,7 +136,7 @@ export function LogIn(): JSX.Element {
                   placeholder="******"
                   {...register('repitPassword', {
                     required: true,
-                    validate: (value) => value === watch('password') || '',
+                    validate: (value) => value === watch('password') || 'Пароли не совпадают',
                   })}
                   className={errors?.repitPassword ? styles.error : ''}
                 />
@@ -157,14 +148,7 @@ export function LogIn(): JSX.Element {
                   className={styles.toggle}
                   onClick={toggleConfirmPasswordVisibility}
                 >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    stroke={showConfirmPassword ? '#512689' : '#808185'}
-                  >
-                    <use href="eye1.svg#eye" />
-                  </svg>
+                  Показать пароль
                 </button>
               </div>
             </div>

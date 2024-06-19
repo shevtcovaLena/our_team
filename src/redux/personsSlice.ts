@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchLikes, fetchUsers } from './thunkActions';
+import { fetchUsers } from './thunkActions';
 import { PersonsType } from '../types/types';
 
 export type SliceState = {
@@ -21,13 +21,12 @@ const personsSlice = createSlice({
       if (user) {
         user.like = !user.like;
       }
+      const likes: Array<{ id: number; like: boolean }> = state.users.map((el) => ({
+        id: el.id,
+        like: el.like ?? false,
+      }));
+      sessionStorage.setItem('likes', JSON.stringify(likes));
     },
-    // setlikes(state, { payload }) {
-    //   const user = state.users.find((user) => user.id === payload.id);
-    //   if (user) {
-    //     user.like = payload.id;
-    //   }
-    // },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUsers.pending, (state) => {
@@ -35,16 +34,18 @@ const personsSlice = createSlice({
     });
     builder.addCase(fetchUsers.fulfilled, (state, { payload }) => {
       if (payload) {
-        state.users = payload.map((el) => ({ ...el, like: false }));
-        state.isLoading = false;
-      }
-    });
-    builder.addCase(fetchLikes.fulfilled, (state, { payload }) => {
-      if (payload) {
-        state.users = state.users.map((el) => {
-            const like = payload.find((lk: { id: number, like: boolean }) => lk.id === el.id);
-            return {...el, ...like}
-          });
+        let likes: Array<{ id: number; like: boolean }> = [];
+        const likestr: string | null = sessionStorage.getItem('likes');
+        if (likestr) {
+          likes = JSON.parse(likestr);
+        }
+        state.users = payload.map((user) => {
+          const like = likes.find((lk) => lk.id === user.id);
+          if (like) {
+            return { ...user, ...like };
+          }
+          return { ...user, like: false };
+        });
         state.isLoading = false;
       }
     });
@@ -52,6 +53,4 @@ const personsSlice = createSlice({
 });
 
 export default personsSlice.reducer;
-export const { likeaction,
-  //  setlikes
-   } = personsSlice.actions;
+export const { likeaction } = personsSlice.actions;

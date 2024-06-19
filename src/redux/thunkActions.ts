@@ -12,14 +12,3 @@ export const fetchUsers = createAsyncThunk('persons/all', async () => {
     console.log(error);
   }
 });
-
-export const fetchLikes = createAsyncThunk('likes', async () => {
-  try {
-    const likes = await localStorage.getItem('likes');
-    if (likes) {
-      return JSON.parse(likes);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
