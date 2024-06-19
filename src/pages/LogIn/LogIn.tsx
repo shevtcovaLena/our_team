@@ -45,7 +45,7 @@ export function LogIn(): JSX.Element {
     } catch (error) {
       console.error(error);
       console.log(`Введите следующие данные: "email": "eve.holt@reqres.in"`);
-      alert(`Для успешной регистрации введите email, который указан в консоли (для удобства копирования)`);
+      alert(`Для успешной регистрации введите email: eve.holt@reqres.in, указан в консоли (для удобства копирования)`);
     }
   };
 
